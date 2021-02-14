@@ -2,5 +2,5 @@ Xmeme-backend/node_modules
 Xmeme-backend/requests
 Xmeme-backend/.env
 
-Xmeme-frontend/node_modules
-Xmeme-frontend/build
+Xmeme-frontend/xmeme/node_modules
+Xmeme-frontend/xmeme/build
