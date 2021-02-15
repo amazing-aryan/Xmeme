@@ -15,7 +15,7 @@ app.get('/memes', (req, res) => {
     })
 })
 
-app.get('/memes/:id', (req, res) => {
+app.get('/memes/:id', (req, res, next) => {
     Meme.findById(req.params.id)
         .then(meme => {
             if (meme) {
@@ -27,7 +27,7 @@ app.get('/memes/:id', (req, res) => {
         .catch(error => next(error))
 })
 
-app.post('/memes', (req, res) => {
+app.post('/memes', (req, res, next) => {
     const body = req.body
     if (!body.name || !body.url || !body.caption) return res.status(400).json({
         error: 'incomplete information, pls send full info'
@@ -52,12 +52,16 @@ app.post('/memes', (req, res) => {
     })
 })
 
-app.patch('/memes/:id', (req, res) => {
+app.patch('/memes/:id', (req, res, next) => {
     const body = req.body
     Meme.findById(req.params.id)
         .then(meme => {
             if (meme) {
-                Meme.updateOne({ _id: ObjectId(id) }, { $set: body })
+                console.log(meme)
+                Meme
+                .updateOne({ "_id": req.params.id }, { $set: body })
+                .then(res.status(204).end())
+                .catch(error => next(error))
             } else {
                 res.status(404).end()
             }
@@ -66,6 +70,7 @@ app.patch('/memes/:id', (req, res) => {
 })
 
 const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
 
     if (error.name === 'CastError' && error.kind === 'ObjectId') {
         return response.status(400).send({ error: 'malformatted id' })
